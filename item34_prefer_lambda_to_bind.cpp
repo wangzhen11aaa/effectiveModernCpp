@@ -20,6 +20,15 @@ enum class Volumn{Normal, Loud, LoudPlusPlus};
 void setAlarm(Time t, Sound s, Duration d, Volumn v){
     cout<< "HELLO, WORLD \n";
 }
+
+class PolyWidget{
+public:
+    template<typename T>
+    void operator() (const T& param){
+        cout << param << endl;
+    }
+};
+
 int main(){
     /* In lambda version, the steady_clock::now() + 1h is an argument to setAlarm
        It will be evaluated when setAlarm is called.
@@ -55,4 +64,21 @@ int main(){
     auto betweenB = std::bind(std::logical_and<>(), std::bind(std::less_equal<int>(), lowVal, _1),
                                                     std::bind(std::less_equal<int>(), _1, highVal));
     cout << "5 is between 1 and 10 (bind version) :" << betweenB(5) << endl;
+
+    PolyWidget pw;
+    /* bind version */
+    auto boundPW = std::bind(pw, _1);
+    boundPW(2);
+
+    /* Codes in book have bug */
+    auto boundPWL = [pw]<typename T>(const auto& param) // C++14 
+    { pw(param); };
+    boundPWL(3);
+    //boundPWL(3);
+    //int x = 3;
+    //boundPWL(&x);
+    //const PolyWidget pw1;
+   /* c++14 version lambda */
+//    auto boundPWL = [pw](const auto& param){pw(param);};
+//    boundPWL(3);
 }
