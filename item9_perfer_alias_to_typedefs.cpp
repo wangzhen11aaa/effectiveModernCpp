@@ -1,5 +1,6 @@
 #include <iostream>
 #include "type_name.hpp"
+#include <list>
 using namespace std;
 
 typedef void(*_FP)(int, const std::string &);
@@ -19,6 +20,24 @@ using remove_reference_t = typename remove_reference<T>::type;
 template<class T>
 using add_lvalue_reference_t = typename add_lvalue_reference<T>::type;
 
+/* Proof typename must precede the type */
+template<typename T>
+struct MyAllocList{
+    typedef std::list<T> type;
+private:
+    enum class WineType
+    {White, Red, Rose};
+    WineType type;
+};
+
+template<typename T>
+class Widget{
+private:
+    /* Usage of typename is right */
+    // typename MyAllocList<T>::type list;     
+    /* no-typename usage is right */
+    MyAllocList<T>::type list;
+};
 
 int main(){
     _FP p_func = &func;
@@ -36,8 +55,9 @@ int main(){
     cout << "r's type : " << type_name<decltype(r)>() << endl;
 
     std::remove_reference<std::remove_const<const int &>::type>::type _r = 20;
-    _r++;
-    cout << "_r's type : " << type_name<decltype(_r)>() << endl;
+    //_r++;
+    //cout << "_r's type : " << type_name<decltype(_r)>() << endl;
+    Widget<int> w;
 
     return 0;
 }
