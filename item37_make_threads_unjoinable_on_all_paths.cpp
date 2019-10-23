@@ -94,7 +94,6 @@ bool doWork1(std::function<bool(int)> filter, int maxVal = tenMillion/1000){
             return true;
         }else{
             return false;
-
     }
 }
 int main(){
