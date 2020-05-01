@@ -47,12 +47,18 @@ auto authAndAccess(Container& c, Index i){
     return c[i]; // return type deduced from c[i];
 }
 
+
+// template<typename Container, typename Index>
+// decltype(auto) authAndAccessWithBracket(Container &c, Index i){
+//     return (c[i]);
+// }
+
 // Prevent the reference-strip of initializing expression action.
-template<typename Container, typename Index>
-decltype(auto)
-authAndAccessNew(Container& c, Index i){
-    return c[i];
-}
+// template<typename Container, typename Index>
+// decltype(auto)
+// authAndAccessNew(Container& c, Index i){
+//     return c[i];
+// }
 // Universal reference for lvalue and rvalue. c++14
 template<typename Container, typename Index>
 decltype(auto) 
@@ -70,7 +76,27 @@ authAndAccessUniversalCE(Container&& c, Index i) ->decltype(std::forward<Contain
     return std::forward<Container>(c)[i];
 }
 
+// For lvalue expression of type T other than names, decltype always reports a type of T&.
+
+decltype(auto) f1(){
+    int x = 0;
+    return x; // decltype(x) is int (direct name), so f1 returns int
+}
+
+decltype(auto) f2(){
+    int x = 0;
+    return (x); // decltype((x)) is int &, so f2 returns int &.
+}
+
 int main(){
+
+    auto f1r = f1();
+    cout << "f1r's type :" << type_name<decltype(f1r)>() << endl;
+
+    auto f2r = f2();
+    cout << "f2r's type :" << type_name<decltype(f2r)>() << endl;
+
+
     const int i = 0;
     int  j = 0;
     // if(decltype(j) == decltype(i)){
@@ -84,7 +110,16 @@ int main(){
     auto _vi = vi[0];
     cout << "vi[0]'s type : " << type_name<decltype(_vi)>() << endl;
     cout << "Before authAndAccessNew function: " << vi[0] << endl;
-    authAndAccess(vi, 0);
+    // _vi = -20;
+    // cout << "After set _vi = 20, _vi :" << _vi << endl;
+    auto x = authAndAccess(vi, 0);
+    cout << type_name<decltype(x)>() << endl;
+
+    // authAndAccessWithBracket() will return a referece type
+    // auto y = authAndAccessWithBracket(vi, 0);
+    // cout << type_name<decltype(y)>() << endl;
+    // y = -1;
+    // cout << "After setting y: y =  " << y << endl; 
     authAndAccessNew(vi, 0) = 100;
     cout << "After authAndAccessNew function : " << vi[0] << endl;
     authAndAccessUniversalCE(vi, 1) = 200;
