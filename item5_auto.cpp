@@ -82,15 +82,37 @@ int main(){
     m["Good"] = 30;
     
     // use another pointer to modity the value.
+    // Which const referece is assigned to non-const reference,
+    // tmp will be referece a temporary object copied from p.
+
     for(const std::pair<std::string, int> &p: m){
         std::pair<std::string, int> tmp = p;
         tmp.first = "ab";
+        tmp.second = -1;
     }
-
-    cout << "After modification: " << endl;
+    cout << "After modification: for(:) grammar " << endl;
     for(const auto &p: m){
         cout << p.first << p.second << endl;
     }
+    // Use C++11 standard to iterate this unorderd_map set
+    for (auto it = m.begin(); it != m.end(); it++){
+        it->second = -1;
+    }
+
+    cout << "After modification:  for(;;) grammar : " << endl;
+    for(const auto &p: m){
+        cout << p.first << p.second << endl;
+    }
+    // test range-for using auto &
+    for(auto &p : m){
+        p.second = -2;
+    }
+
     
+    cout << "After modification: for(;) with auto &p grammar : "<< endl;
+    for(const auto &p: m){
+        cout << p.first << p.second << endl;
+    }
+
     return 0;
 }
