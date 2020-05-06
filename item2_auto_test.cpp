@@ -58,19 +58,27 @@ void f1(std::initializer_list<T> param){
 
 // auto in a function return type or a lambda parameter implies template type
 // deduction, not auto type deduction.
+//error: cannot deduce return type from initializer list
 
-auto createInitList(){
-    return {1,2,3};
-}
+// This is c++14, lambda function which will make the auto act as 
+// some template deduction.
+//auto createInitList(){
+//    return {1,2,3};
+//}
 
-std::initializer_list<int> createInitList(){
+// returning address of local temporary object
+std::initializer_list<int> createInitList1(){
     return {1,2,3};
 }
 
 int main(){
     // auto deduce x as initialize list.
+    // Which the x is deduced as the initialize_list type.
     auto x = {1,2,3};
+    // While the template function f can not deduce this stuff.
     f(x);
+    // test the direct {}
+    //f({1,2,3});
     f1({4,5,6});
     return 0;
 }
