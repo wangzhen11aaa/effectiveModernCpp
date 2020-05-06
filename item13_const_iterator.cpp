@@ -32,10 +32,19 @@ int main(){
     vector<int> v{1,2,3,4};
     cout << "type_name of v : " << type_name<decltype(v)>() << endl; 
     int x = 5;
+    // We test the non-const iterator version, to see if this function works.
+    vci _vci0 = std::find(v.begin(), v.end(), 1);
+    cout << *_vci0 << endl;
+    cout << "type of _vci0 : " << type_name<decltype(_vci0)>() << endl; 
+
+    // In this function, we force the v.begin() non-const iterator converted to const iterator.
     vci _vci = std::find(static_cast<vci>(v.begin()), static_cast<vci>(v.end()), 1);
     //vci _vci_ = std::find(static_cast<vi>)
+    cout << "type of _vci : " << type_name<decltype(_vci)>() << endl; 
     v.insert(_vci, 10);
-    cout << "result fo _vci :" << *_vci;
+    // No conversion from const reference to non-const reference.
+    //v.insert(static_cast<vi>(_vci), 100);
+    cout << "result fo _vci :" << *_vci << endl;
     // Insert after finding item in vector.
     auto it = std::find(v.cbegin(), v.cend(), 3);
     cout << "type_name of it is : " <<  type_name<decltype(it)>() << endl;
