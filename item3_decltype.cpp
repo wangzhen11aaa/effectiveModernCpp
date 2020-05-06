@@ -54,11 +54,13 @@ auto authAndAccess(Container& c, Index i){
 // }
 
 // Prevent the reference-strip of initializing expression action.
-// template<typename Container, typename Index>
-// decltype(auto)
-// authAndAccessNew(Container& c, Index i){
-//     return c[i];
-// }
+// For single auto works like some template<typename T> fun(T),
+// which will be acted for case3 non-pointer & non-reference deduction.
+template<typename Container, typename Index>
+decltype(auto)
+authAndAccessNew(Container& c, Index i){
+    return c[i];
+}
 // Universal reference for lvalue and rvalue. c++14
 template<typename Container, typename Index>
 decltype(auto) 
