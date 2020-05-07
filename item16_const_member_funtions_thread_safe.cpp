@@ -6,6 +6,10 @@
 using namespace std;
 
 
+/* We want to construct a function to compute the root(s) of a polynomial. i.e, values where polynomial evaluates to zero.
+   For compute the roots of polynomial can be expensive, we certainly don't want to do it more than once. We'll thus cache
+   the root(s) of polynomial if we have to compute them, and we'll implement roots to return the cache value.
+*/
 class Polynomial{
 public:
     using RootsType = std::vector<double>;
@@ -17,6 +21,7 @@ public:
         }
     }
 private:
+    //Add mutable qualifier, so we can modify these members in const roots member function.
     mutable bool rootsAreValid{false};
     mutable RootsType rootVals {};
 };
