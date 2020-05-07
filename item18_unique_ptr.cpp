@@ -5,6 +5,7 @@
 using namespace std;
 class Investment{
 public:
+    int k;
     Investment(int _m):m(_m){};
     virtual ~Investment(){};
 private:
@@ -34,12 +35,14 @@ std::unique_ptr<Investment> makeInvestment(Ts&&... parameters){
 }
 
 auto delInvmt = [](Investment* pInvestment){
+    cout << "delete the pointer from lambda function";
+    cout << "the value pInvestment pointed by is : " << pInvestment->k << endl;
     delete pInvestment;
 };
 
 /* Textbook example */
 
-/* self defined delete function. */
+/* self defined delete function. unique_ptr support self */
 template<typename... Ts>
 /* Maybe can use auto */
 //std::unique_ptr<Investment, decltype(delInvmt)> makeInvestment(int type_code, Ts&&... params){
