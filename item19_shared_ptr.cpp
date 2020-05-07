@@ -22,6 +22,9 @@ pointer to the resource's reference count.
     #### on the particle accelerator of undefined behavior, because the pointed-to object will have multiple control blocks. Multiple control blocks mean 
     #### multiple reference counts, and multiple control blocks means the object will be destroyed multiple times (once for each reference count). That means that
     #### the code like this is bad, bad, bad.
+
+    $$$$ Conclusion: std::shared_ptrs can't do is work with arrays. In yet another difference from std::unique_ptr, std::shared_ptr has an API that's designed only for pointers
+    $$$$ to single objects. There's no std::shared_ptr<T[]>.
 */
 /*
     The shared_ptr have the best of both worlds: a system that works automatically(like garbage collection), yet applies to all resources
@@ -128,11 +131,13 @@ int main(){
        echo shared_ptr will free the Raw pointer, which results that
        the pointer will be released more than noce, That sucks with core dump.(abort)
      */
-    
+
     std::shared_ptr<Widget> spw1(pw, loggingLevel);
     std::shared_ptr<Widget> spw2(pw, loggingLevel);
     cout << "spw1's use_count : " << spw1.use_count() << endl;
     cout << "spw2's use_count : " << spw2.use_count() << endl;
+
+    
     return 0;
 
 }
