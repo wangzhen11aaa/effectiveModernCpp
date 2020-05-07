@@ -15,6 +15,13 @@ class Widget{
 };
 using WidgetID = int;
 
+/*
+    This kind of smart pointer has to contend with a problem unknown to std::shared_ptrs: the possibility that what it points to 
+    has been destroyed. A truly smart pointer would deal with this problem by tracking when it dangles, i.e, when the object it is 
+    supposed to point to no longer exists. That's precisely the kind of smart pointer std::weak_ptr is.
+    The std::weak_ptr looks anything but smart. std::weak_ptrs can't be dereferenced, nor can they be tested for nullness.
+    That's because std::weak_ptr isn't a standalone smart pointer. It's an augmentation of std::shared_ptr.
+*/
 std::shared_ptr<const Widget> fastLoadWidget(WidgetID id){
     static std::unordered_map<WidgetID, std::weak_ptr<const Widget>> cache;
     auto objPtr = cache[id].lock();
