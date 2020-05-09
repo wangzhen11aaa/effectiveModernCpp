@@ -11,7 +11,8 @@ using namespace boost;
 
 
 class Widget{
-
+    public:
+        ~Widget(){cout << "Widget destroyed" << endl;}
 };
 using WidgetID = int;
 
@@ -62,11 +63,27 @@ int main(){
     /* Use std::shared_ptr */
     auto sp1 = make_shared<Widget>();
     std::weak_ptr<Widget>wp1(sp1);
+    auto _sp1 = sp1;
     auto sp2 = wp1.lock();
+    /* std::shared_ptr<T>::use_count 
+        Returns the number of different shared_ptr instances (this included) managing the current object.
+        If there is no managed object, 0 is returned (for it is reset).
+
+        In multithreaded environment, the value returned by the use_count is approximate(typically implementatioins use
+        a memory_order_relaxed load)
+    */
     cout << "After locking: the use_count of sp1: " << sp1.use_count() << endl;
     //std::weak_ptr<Widget> wp(sp);
+    cout << "Before sp1.reset() sp1.use_count() " << sp1.use_count() << endl;
     sp1.reset();
+    cout << "After sp1.reset() sp1.use_count() " << sp1.use_count() << endl;
+    cout << "Before sp2.reset() sp2.use_count() " << sp2.use_count() << endl;
     sp2.reset();
+    cout << "After sp2.reset() sp2.use_count() " << sp2.use_count() << endl;
+    //_sp1.reset();
+    cout << "Before _sp1.reset() _sp1.use_count() " << _sp1.use_count() << endl;
+    _sp1.reset();
+    cout << "After _sp1.reset() _sp1.use_count() " << _sp1.use_count() << endl;
 
     auto sp3 = wp1.lock();
     if(sp3 == nullptr){
