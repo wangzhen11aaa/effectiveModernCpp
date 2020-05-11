@@ -82,7 +82,7 @@ using namespace std;
         avoid a default by-reference capture mode.For example, our filtering lambda might be 
         used only as an argument of C++11 std::all_of, which returns whether all elements in
         range satisfy a condition:
-        
+
     }
 */
 class Widget{
@@ -106,6 +106,109 @@ int computeSomeValue2(){
 int computeDivisor(int x, int y){
     return x + y;
 }
+/*
+    class Widget{
+        public:
+            ...
+            void addFilter() const; // ctors, etc, add an entry to filters.
+        private:
+            int divisor; //used in Widget's filter
+    };
+
+    Why do we get to know the [=] grammar.
+    1. void Widget::addFilter() const{
+        filters.emplace_back(){
+            [](int value) {return value % divisor == 0;} // error divisor
+        }
+    }
+    1's error: Captures apply only to non-static local variables(including parameters) visible in the scope where the 
+    lambda is created.In the body of Widget::addFilter, divisor is not a local variable, it's data member of the Widget class.
+    It cann't be captured. Yet if the default capture mode is eliminated, the code won't compile:
+
+    2. void Widget::addFilter() const{
+        filters.emplace_back([divisor](int value){return value % divisor == 0;}) // error! no local divisor to capture.
+    }
+    2's error: same as 1's.Although the explicitly capture divisor(either by value or by reference - it doesn't matter), the
+    capture won't compile, because divisor isn't a local variable or a parameter:
+
+    3. 
+    void Widget::addFilter() const{
+        filters.emplace_back(){
+            [=](int value){return value % divisor == 0;}
+        }
+    }
+    3's correct: The explanation hinges on the implicit use of a raw pointer: this. Every non-static member function has a this 
+    pointer, and you use that pointer every time you mention a data member of the class. Inside any Widget member function, for 
+    example, compilers internally replace uses of divisor with this->divisor. In the version of Widget::addFilter with a default 
+    by-value capture.
+    Equals:
+    void Widget::addFilter() const{
+        auto currentObjectPtr = this;
+
+        filters.emplace_back({
+            [currentObjectPtr](int value) {
+                return value % currentObjectPtr->divisor == 0;
+            }
+        })
+    }
+    Understanding this is tantamount to understanding that the viability of the closures arising from this lambda is tied to the lifetime of the Widget whoes this pointer
+    they contain a copy of.
+
+    Some more complex example.
+
+    using FilterContainer = std::vector<std::function<bool(int)>>; // as before
+    FilterContainer filters;
+    
+    void doSomeWork(){
+        auto pw = std::make_unique<Widget>(); // create Widget; See Item21 for std::make_unique
+        pw->addFilter(); add Filter that uses Widget::divisor
+        ...
+    }// destory Widget; filters now holds dangling pointer!
+
+    When a call is made to doSomeWork, a filter is created that depends on the Widget object produced by std::make_unique, i.e, a filter that contains a copy of pointer
+    of that Widget- the Widget's this pointer. This filter is added to filters, but When doSomeWork finishes, the Widget is destroyed by the std::unique_ptr managing its 
+    lifetime. From that point on, filters contains an entry with dangling  pointer.
+
+    To avoid the pointer-dangling problem, we need the divisor to be a local copy of data member you want to capture and then capturing the copy:
+    void Widget::addFilter() const{
+        auto divisorCopy = divisor;
+        filters.emplace_back(
+            [divisorCopy](int value){return value % divisorCopy == 0;}
+        )
+    }
+
+    To be honest, if you take this approach, default by-value capture will work, too.
+    void Widget::addFilter() const{
+        auto divisorCopy = divisor; // copy data member
+        fitlers.emplace_back(
+            [=](int value){
+                return value % divisorCopy == 0;
+            } // capture the copy and use the copy.
+        )
+    }
+
+    More concise way in C++14.
+    void Widget::addFilter() const{
+        filters.emplace_back([divisor=divisor](int value){return value % divisor == 0;}) //C++14 copy divisor to closure use the copy.
+    }
+
+    void addDivisorFilter(){
+        static auto calc1 = computeSomeValue1(); // now static
+        static auto calc2 = computeSomeValue2(); // now static
+
+        static auto divisor = computeDivisor(calc1, calc2);
+        
+        fitlers.emplace_back([=](int value){return value % divisor == 0;});// captures nothing! refers to above static
+
+        ++divisor; // modify divisor.
+
+    }
+
+    A casual reader of this code could be forgiven for seeing "[=]" and thinking, "Okay, the lambda makes a copy of all objects it uses and it therefore self-contained".
+    But it's not self-contained. This lambda doesn't use any non-static local variables, so nothing is captured. Rather, the code for the lambda refers to the static variable
+    divisor.
+
+*/
 /* addDivisorFilter function with static value*/
 void Widget::addDivisorFilter(){
     /* For capture part only captures non-static part, so the last divisor and the second to last
