@@ -1,6 +1,6 @@
 #include <iostream>
 #include "type_name.hpp"
-
+#include <functional>
 using namespace std;
 
 /* C++14 supports the method to move object to closure */
@@ -31,7 +31,7 @@ public:
     pw(std::move(ptr)){}
 
     bool operator()() const{
-        cout << "Invoke operator() " << endl;
+        cout << "Invoke operator() ";
         return pw->isArchived() && pw->isProcessed();
     }
 
@@ -45,15 +45,16 @@ int main(){
         cout << "pw's type :" << type_name<decltype(pw)>() << endl;
         return pw->isArchived() && pw->isProcessed();
     };
-    func();
+    cout << boolalpha << "func: "<< func() << endl;
     /* More concise */
     auto func1 = [pw = make_unique<Widget>()]{
         return pw->isArchived() && pw->isValidated();
     };
-    func1();
+    cout << "func1: " << func1() << endl;
     /* Test on c++11 version */
     auto func2 = IsValAndArch(std::make_unique<Widget>());
-    func2();
+    //func2();
+    cout << "func2: " << func2() << endl;
     
     /* C++11 emulation */
     auto func3 = std::bind(
@@ -62,6 +63,6 @@ int main(){
             std::make_unique<Widget>()
     );
     
-    func3();
+    cout << "func3: " << func3() << endl;
     return 0;
 }

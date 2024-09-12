@@ -144,7 +144,7 @@ void f(const std::vector<int>& v){
 }
 
 void f(std::size_t val){
-    cout << "val : " << val;
+    cout << "val : " << val << endl;
 }
 
 class Widget{
@@ -157,14 +157,18 @@ const std::size_t Widget::MinVals;
 
 /* function overloading */
 int process(int value){
-    return 0;
+	cout << "process(int value) " << endl;
+	return 0;
 }
 int process(int value, int priority){
+	cout << "process(int value, int priority) " << endl;
     return 1;
 }
 
 void f(int pf(int)){
-    cout << "f pf \n";
+    cout << "f " << pf << "\n";
+	cout << reinterpret_cast<void *>(pf) << "\n";
+	// cout << pf(21) << endl;
 }
 // template<typename... Ts>
 // void fwd(Ts&&... args){
@@ -179,7 +183,7 @@ T WorkOnValue(T param){
 
 /* On bitfield */
 struct IPv4Header{
-    std::uint32_t version:4,
+    uint32_t version:4,
                     IHL:4,
                     DSCP:6,
                     ECN:2,
@@ -203,15 +207,20 @@ int main(){
     /* Invoke on MinVals is not good , for 
     fwd's parameter is universal reference*/
     /* Define the variable */
-    fwd(Widget::MinVals);
-    /* Invoke on 20 is good */
+	std::cout << "fwd(Widget::MinVals)" << endl;
+	fwd(Widget::MinVals);
+	/* Invoke on 20 is good */
+	std::cout << "fwd(20)" << endl;
     fwd(20);
     /* invoke on function pointer */
+	std::cout << "f(process)" << endl;
     f(process);
     using ProcessFuncType = int (*)(int);
     ProcessFuncType processValPtr = process;
+	std::cout << "fwd(processValPtr)" << endl;
     fwd(processValPtr);
     /* static_cast function template to function ptr */
+	std::cout << "fwd(static_cast<ProcessFuncType>(WorkOnValue))" << endl;
     fwd(static_cast<ProcessFuncType>(WorkOnValue));
 
     /* on bit fields */
@@ -220,7 +229,7 @@ int main(){
     /* Can not bind a non-const reference to bit field, for no pointer can be pointed to arbitrary bits */
     //f(h.totalLength);
 
-    auto length = static_cast<std::uint16_t>(h.totalLength);
+    auto length = static_cast<uint16_t>(h.totalLength);
     f(length);
     return 0;
 }

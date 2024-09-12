@@ -5,10 +5,13 @@
 
 using namespace std;
 
+const int CNT = 100000000;
 
 void add(std::atomic<int>& _ac, volatile int& _vc){
-    ++_ac;
-    ++_vc;
+	for (auto i = 0; i < CNT; i++){
+		++_ac;
+	    ++_vc;
+	}
 }
 
 int main(){

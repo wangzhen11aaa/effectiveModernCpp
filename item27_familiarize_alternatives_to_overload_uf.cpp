@@ -400,7 +400,8 @@ void logAndAdd(T&& name){
        So we should remove reference.
      */
     /* std::remove_reference<T> */
-    logAndAddImpl(std::forward<T>(name),  std::is_integral<typename std::remove_reference<T>::type>());
+    //logAndAddImpl(std::forward<T>(name),  std::is_integral<typename std::remove_reference<T>::type>{});
+    logAndAddImpl(std::forward<T>(name), std::is_same<int ,typename std::decay<T>::type>());
     /* is_same structure only has one method which is ::value, return bool type. */
     //logAndAddImpl(std::forward<T>(name), std::is_same<int ,typename std::decay<T>::type>);
 }
@@ -548,8 +549,8 @@ int main(){
     cout << "XiaoDi's name : " << p1.getName() << endl;
 
     /* short type shows up again */
-    //Person p2(nameIdex);
-    //cout << "p2's name: "<< p2.getName() << endl;
+    // Person p2(nameIdex);
+    // cout << "p2's name: "<< p2.getName() << endl;
     /* Invoke copy constructor */
     const auto cp = p;
     Person p3(cp);

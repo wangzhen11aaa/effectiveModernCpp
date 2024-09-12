@@ -10,7 +10,7 @@ template<typename T>
 /* Reference collapsing: Rule :If either reference is a lvalue reference, the result is a lvalue reference. Others are 
 rvalue referenc. So func (T& &&) is a lvalue reference */
 void func(T&& param){
-    cout << "param's type : " << type_name<decltype(param)>() << endl;
+    //cout << "param's type : " << type_name<decltype(param)>() << endl;
     cout << "T's type : " << type_name<T>() << endl;
 
 }

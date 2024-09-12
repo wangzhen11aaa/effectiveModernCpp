@@ -244,9 +244,11 @@ void Widget::addFilter() const
     // filters.emplace_back(
     //     [currentObjectPtr](int value){return value % currentObjectPtr->divisor == 0;}
     // );
-    /* The most safe version, get non-static divisor from this class */
-    auto divisorCopy = divisor;
-    filters.emplace_back(
+	filters.emplace_back([this](int value)
+						 { return value % this->divisor; });
+	/* The most safe version, get non-static divisor from this class */
+	auto divisorCopy = divisor;
+	filters.emplace_back(
         [=](int value){return value % divisorCopy == 0;}
     );
     /* C++14 version capture */

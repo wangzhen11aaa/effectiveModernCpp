@@ -89,7 +89,7 @@ bool doWork1(std::function<bool(int)> filter, int maxVal = tenMillion/1000){
         ThreadRAII::DotrAction::join
         );
         auto nh = t.get().native_handle();
-        if(0>0){
+        if(nh>0){
             t.get().join();
             return true;
         }else{
@@ -100,5 +100,4 @@ int main(){
     doWork(std::bind(global_filter, 1));
     cout << "Hello ,world \n";
     doWork1(std::bind(global_filter, 1));
-
 }

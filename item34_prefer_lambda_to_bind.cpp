@@ -1,5 +1,7 @@
 #include <iostream>
 #include "type_name.hpp"
+#include <chrono>
+#include <functional>
 
 using namespace std;
 
@@ -25,6 +27,10 @@ class PolyWidget{
 public:
     template<typename T>
     void operator() (const T& param){
+        cout << param << endl;
+    }
+    template<typename T>
+    void operator() (const T& param) const{
         cout << param << endl;
     }
 };
@@ -71,7 +77,7 @@ int main(){
     boundPW(2);
 
     /* Codes in book have bug */
-    auto boundPWL = [pw]<typename T>(const auto& param) // C++14 
+    auto boundPWL = [pw](const auto& param)->void // C++14 
     { pw(param); };
     boundPWL(3);
     //boundPWL(3);
