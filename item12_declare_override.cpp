@@ -30,13 +30,13 @@ class Base{
 class Derived0 : public Base{
     public:
         virtual void mf1() const & override {cout << "Invoke Derived0's mf1() function" << endl;}
-        virtual void mf1() const && override { cout << "Rvalue Invoke Base's mf1() function" << endl;}
+        virtual void mf1() const && override { cout << "Rvalue Invoke Derived0's mf1() function" << endl;}
 };
 
 class Derived1: public Derived0{
     public:
         virtual void mf1()  const & override {cout << "Invoke Derived1's mf1() function" << endl;}
-        virtual void mf1() const && override { cout << "Rvalue Invoke Base's mf1() function" << endl;}
+        virtual void mf1() const && override { cout << "Rvalue Invoke Derived1's mf1() function" << endl;}
 };
 
 Widget makeWidget(){
@@ -66,8 +66,9 @@ int main(){
 
     // I did not figure out why this rvalue can invoke
     // lvalue function type.
-    Derived1().mf1();
-    Derived0().mf1();
-    Base().mf1();
+	std::cout << "tmp rvalue's invoke \n";
+	Derived1{}.mf1();
+	Derived0{}.mf1();
+    Base{}.mf1();
     return 0;
 }
