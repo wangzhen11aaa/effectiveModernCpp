@@ -181,29 +181,30 @@ private:
    This class is in header.
  */
 class Widget1{
+    struct Impl{
+		int a;
+		double b;
+	};
+
 public:
-    Widget1();
+	Widget1();
+	void print() {
+		cout << "pImpl->a : " << pImpl->a << "\npImpl->b: " << pImpl->b << endl;
+	}
 
 private:
-    struct Impl;
-    std::unique_ptr<Impl> pImpl;
+    std::unique_ptr<Widget1::Impl> pImpl;
 
 };
 /* Implement in .cpp */
 /* Additional work, which does not occur in mac environment.
 
  */
-
-struct Widget1::Impl{
-    int a;
-    double b;
-    vector<int> v;
-};
-
-Widget1::Widget1():pImpl(std::make_unique<Impl>()){}
+Widget1::Widget1():pImpl(std::make_unique<Widget1::Impl>()){}
 
 
 int main(){
     Widget1 w;
-    return 0;
+	w.print();
+	return 0;
 }

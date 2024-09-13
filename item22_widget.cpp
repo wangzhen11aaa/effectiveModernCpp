@@ -2,7 +2,7 @@
 #include "item22_gadget.h"
 #include <string>
 #include <vector>
-
+#include <iostream>
 struct Widget::Impl{
     std::string name;
     std::vector<double> data;
@@ -26,5 +26,6 @@ Widget& Widget::operator=(const Widget& rhs){
 int main(){
     Widget w;
     Widget w2 = std::move(w);
-    return 0;
+	w.pImpl_empty();
+	return 0;
 }
