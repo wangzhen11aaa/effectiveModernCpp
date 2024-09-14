@@ -2,6 +2,7 @@
 #include <memory>
 #include <vector>
 #include <unordered_map>
+#include <functional>
 
 using namespace std;
 
@@ -46,9 +47,9 @@ int main(){
     // some test on unique_ptr.
     int i = 5;
     std::unique_ptr<int> ui = make_unique<int>(11);
-    cout << "ui' address : " << ui << endl;
+    cout << "ui' address : " << &ui << endl;
     std::unique_ptr<int> ui1 = std::move(ui);
-    cout << "ui1's address : " << ui1 << endl;
+    cout << "ui1's address : " << &ui1 << endl;
     cout << "After moving : " << *ui1 << endl;
 
     // clousre of function partt. 

@@ -150,7 +150,7 @@ int main(){
         不 建议 在具有用户声明的复制构造函数或析构函数的类中生成此函数。
 
     */
-    st1 = st;
+    // st1 = st;
 
    
     cout << "st1's value size: " << st1.size() << endl;

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <cstdint>
 #include "type_name.hpp"
 
 
@@ -51,7 +52,7 @@ int main(){
     std::cout << "underlying type for enum Color : " << typeid(std::underlying_type<Color>::type).name() << endl;
     
     // use toEuType function to get element type in Emulator.
-    std::tuple<string, string, string> profile{"trousers", "skirt"};
+    std::tuple<string, string, string> profile{"trousers", "skirt", "hat"};
     auto t_b = std::get<toEmType(_Color::black)>(userInfo);
     cout << "trouser's brand : " << t_b << endl;
     auto s_b = std::get<toEmType(_Color::white)>(userInfo);

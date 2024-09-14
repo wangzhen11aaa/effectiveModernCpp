@@ -276,31 +276,31 @@ template <typename T> void logAndAdd1(T &&name) {
 }
 
 /* class Person for these conditions */
-class Person {
-public:
-  /* Perfect forwarding ctor */
-  template <typename T> explicit Person(T &&n) : name(forward(n)) {
-    std::cout << "perfect forwarding is called \n";
-  }
-  /* int ctor */
-  explicit Person(int idx) : name(nameFromIdx(idx)) {}
-  string getName() { return name; }
+// class Person {
+// public:
+//   /* Perfect forwarding ctor */
+//   template <typename T> explicit Person(T &&n) : name(forward(n)) {
+//     std::cout << "perfect forwarding is called \n";
+//   }
+//   /* int ctor */
+//   explicit Person(int idx) : name(nameFromIdx(idx)) {}
+//   string getName() { return name; }
 
-private:
-  string name;
-};
+// private:
+//   string name;
+// };
 
 /* Derived class copy and move constructor do not call base class's
    copy and move constructors.
  */
 
-class SpecialPerson : public Person {
-public:
-  template <typename T> SpecialPerson(T &&__name) : Person(__name){};
-  /* The following line invoke the Person's universal-reference verson ctor */
-  SpecialPerson(const SpecialPerson &rhs) : Person(rhs) {}
-  SpecialPerson(SpecialPerson &&rhs) : Person(std::move(rhs)) {}
-};
+// class SpecialPerson : public Person {
+// public:
+//   template <typename T> SpecialPerson(T &&__name) : Person(__name){};
+//   /* The following line invoke the Person's universal-reference verson ctor */
+//   SpecialPerson(const SpecialPerson &rhs) : Person(rhs) {}
+//   SpecialPerson(SpecialPerson &&rhs) : Person(std::move(rhs)) {}
+// };
 
 int main() {
   string petName("Darla");
@@ -327,17 +327,17 @@ int main() {
   /* Sorry this invoke will be sucked by universal reference */
   // logAndAdd1(nameIdex);
 
-  Person p(2);
-  cout << "p(2)'s name : " << p.getName() << endl;
-  Person p1("XiaoDi");
-  cout << "XiaoDi's name : " << p1.getName() << endl;
+//   Person p(2);
+//   cout << "p(2)'s name : " << p.getName() << endl;
+//   Person p1("XiaoDi");
+//   cout << "XiaoDi's name : " << p1.getName() << endl;
 
   /* short type shows up again */
   // Person p2(nameIdex);
   // cout << "p2's name: "<< p2.getName() << endl;
   /* Invoke copy constructor */
-  const auto cp = p;
-  Person p3(cp);
+//   const auto cp = p;
+//   Person p3(cp);
 
   /* Special person */
   // SpecialPerson sp("abed");

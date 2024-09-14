@@ -6,9 +6,9 @@ using namespace std;
 // In C++11, we can only have one return statement for a constexpr function.
 // So we need to write the function like pow(n, e) = n^e
 // only recursive version for pow.
-constexpr int pow(int base, int exp) noexcept{
-    return (exp == 0 ? 1: base * pow(base, exp-1));
-}
+// constexpr int pow(int base, int exp) noexcept{
+//     return (exp == 0 ? 1: base * pow(base, exp-1));
+// }
 
 // C++14 standard, we can have more statements in constexpr function,
 // and we can write loop.
